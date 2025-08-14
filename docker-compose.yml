@@ -1,0 +1,22 @@
+services:
+  auth:
+    build: .
+    container_name: gnosis-auth-dev
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./:/app
+    env_file:
+      - .env
+    restart: unless-stopped
+    command: ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "5000", "--reload"]
+    depends_on:
+      - ndb-emulator
+
+  ndb-emulator:
+    image: google/cloud-sdk:460.0.0
+    container_name: gnosis-auth-ndb-emulator
+    ports:
+      - "8089:8089"
+    command: gcloud beta emulators datastore start --host-port=0.0.0.0:8089 --project=${GOOGLE_CLOUD_PROJECT:-gnosis-auth-dev} --no-store-on-disk
+    restart: unless-stopped

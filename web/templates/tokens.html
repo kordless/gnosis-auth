@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Tokens - {{ request.state.config.BRAND }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/dashboard">{{ request.state.config.BRAND }}</a>
+            <div class="collapse navbar-collapse">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="/tokens">API Tokens</a></li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/api/auth/logout">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>API Tokens</h1>
+        </div>
+
+        {% if request.query_params.get('new_token') %}
+        <div class="alert alert-success">
+            <strong>New token created!</strong> Please copy it now. You will not be able to see it again.
+            <pre class="mt-2"><code>{{ request.query_params.get('new_token') }}</code></pre>
+        </div>
+        {% endif %}
+
+        <div class="card mb-4">
+            <div class="card-header">Create New Token</div>
+            <div class="card-body">
+                <form action="/api/tokens" method="post">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Token Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="e.g., My Test Script" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Create Token</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">Your Tokens</div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    {% for token in tokens %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{ token.name }}</strong>
+                            <small class="text-muted d-block">Created: {{ token.created }}</small>
+                        </div>
+                        <form action="/api/tokens/{{ token.uid }}/revoke" method="post">
+                            <button type="submit" class="btn btn-danger btn-sm">Revoke</button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item text-center text-muted">You have no API tokens.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

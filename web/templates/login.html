@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gnosis</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+        body { font-family: 'JetBrains Mono', monospace; }
+        .login-card {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-green {
+            color: #4ade80;
+            text-shadow: 0 0 5px #4ade80, 0 0 10px #4ade80;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200 flex items-center justify-center h-screen">
+
+    <div class="login-card rounded-lg p-8 w-full max-w-md">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold neon-green">GN0SiS</h1>
+            <p class="text-gray-400">Authentication Service</p>
+        </div>
+
+        <div class="space-y-4">
+            <form action="/api/auth/login" method="post" class="space-y-4">
+                <input type="hidden" name="return_url" value="{{ request.query_params.get('return_url') }}">
+                <div>
+                    <label for="email" class="sr-only">Email address</label>
+                    <input type="email" name="email" id="email" required
+                           class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-md focus:ring-green-500 focus:border-green-500"
+                           placeholder="Enter your email...">
+                </div>
+                <button type="submit"
+                        class="flex items-center justify-center w-full px-4 py-3 bg-green-600 hover:bg-green-500 rounded-md transition-colors font-semibold">
+                    <i class="fas fa-envelope w-6 text-center"></i>
+                    <span class="ml-3">Continue with Email</span>
+                </button>
+            </form>
+
+            <div class="relative flex items-center">
+                <div class="flex-grow border-t border-gray-700"></div>
+                <span class="flex-shrink mx-4 text-gray-500">OR</span>
+                <div class="flex-grow border-t border-gray-700"></div>
+            </div>
+
+            <a href="/api/oauth/google/login?return_url={{ request.query_params.get('return_url') }}" 
+               class="flex items-center justify-center w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-md transition-colors">
+                <i class="fab fa-google w-6 text-center text-red-500"></i>
+                <span class="ml-3">Continue with Google</span>
+            </a>
+            <a href="/api/oauth/github/login?return_url={{ request.query_params.get('return_url') }}" 
+               class="flex items-center justify-center w-full px-4 py-3 bg-gray-800 hover:bg-gray-700 rounded-md transition-colors">
+                <i class="fab fa-github w-6 text-center"></i>
+                <span class="ml-3">Continue with GitHub</span>
+            </a>
+        </div>
+
+        <div class="mt-8 text-center">
+            <p class="text-xs text-gray-500">
+                By continuing, you agree to the Gnosis Terms of Service and Privacy Policy.
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>
